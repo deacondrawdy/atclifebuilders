@@ -1,0 +1,6 @@
+# pnpm 11 requires explicit approval for packages that run install scripts.
+# All three ship prebuilt binaries; building them is safe and expected.
+allowBuilds:
+  esbuild: true
+  sharp: true
+  unrs-resolver: true

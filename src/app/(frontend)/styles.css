@@ -1,0 +1,190 @@
+@import 'tailwindcss';
+
+/* ==========================================================================
+   ATC LIFE BUILDERS — DESIGN SYSTEM
+   Palette sampled directly from the approved mockups (see README).
+   ========================================================================== */
+
+@theme {
+  /* --- Brand: indigo / violet ramp ------------------------------------- */
+  --color-ink: #12103a; /* serif headlines, deepest text */
+  --color-navy-950: #0d0b2b; /* footer base */
+  --color-navy-900: #1c1554; /* header CTA, dark bands */
+  --color-navy-800: #241b6b;
+  --color-indigo-700: #312483; /* primary button fill */
+  --color-indigo-600: #3b23a8; /* eyebrow, links */
+  --color-violet-500: #4b3ca9; /* italic accent text */
+  --color-violet-400: #625caa; /* icon circles */
+  --color-violet-300: #8880b8;
+  --color-violet-200: #b8b2d8;
+
+  /* --- Brand: gold ------------------------------------------------------ */
+  --color-gold-600: #b8933f;
+  --color-gold-500: #d8b35e; /* swoosh, subscribe button */
+  --color-gold-400: #e8cb8e;
+  --color-gold-200: #f2e3c4;
+
+  /* --- Neutrals / surfaces --------------------------------------------- */
+  --color-canvas: #f7f7fb; /* page background */
+  --color-surface: #ffffff; /* cards */
+  --color-lavender-100: #f0f0f8; /* section bands */
+  --color-lavender-200: #e8e8f8;
+  --color-lavender-300: #e0e0f0;
+  --color-body: #353953; /* body copy */
+  --color-muted: #6b6f88; /* secondary copy */
+
+  /* --- Type ------------------------------------------------------------- */
+  --font-display: var(--font-playfair), 'Playfair Display', Georgia, serif;
+  --font-sans: var(--font-poppins), 'Poppins', ui-sans-serif, system-ui, sans-serif;
+
+  /* --- Elevation -------------------------------------------------------- */
+  --shadow-card: 0 2px 4px rgb(18 16 58 / 0.03), 0 12px 32px rgb(18 16 58 / 0.06);
+  --shadow-card-hover: 0 4px 8px rgb(18 16 58 / 0.05), 0 20px 48px rgb(18 16 58 / 0.11);
+  --shadow-cta: 0 6px 20px rgb(49 36 131 / 0.28);
+
+  /* --- Motion ----------------------------------------------------------- */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ==========================================================================
+   BASE
+   ========================================================================== */
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-body);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    color: var(--color-ink);
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-indigo-600);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background: var(--color-violet-200);
+    color: var(--color-ink);
+  }
+}
+
+/* ==========================================================================
+   SIGNATURE ELEMENTS
+   The gold swoosh under accent headings is the brand's defining flourish.
+   Drawn as an SVG so it scales with the text instead of being a fixed image.
+   ========================================================================== */
+
+@layer components {
+  /* Italic violet accent phrase, e.g. "Life by Design." */
+  .accent-phrase {
+    font-family: var(--font-display);
+    font-style: italic;
+    color: var(--color-violet-500);
+    position: relative;
+    display: inline-block;
+  }
+
+  /* Gold underline flourish — tapers at both ends, thicker in the middle,
+     with a small spark at the trailing tip, matching the mockups. */
+  .swoosh {
+    position: relative;
+    display: inline-block;
+  }
+
+  .swoosh::after {
+    content: '';
+    position: absolute;
+    left: 2%;
+    right: -3%;
+    bottom: -0.16em;
+    height: 0.22em;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 14' preserveAspectRatio='none'%3E%3Cpath d='M2 10C40 4 110 1.5 176 3.2c38 1 78 3.4 120 6.6-44-1.2-84-1.4-120-.7C110 10.3 42 12 2 10Z' fill='%23D8B35E'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    pointer-events: none;
+  }
+
+  /* Eyebrow label above headings */
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-indigo-600);
+  }
+
+  .eyebrow-rule::after {
+    content: '';
+    display: block;
+    width: 2.75rem;
+    height: 2px;
+    margin-top: 0.6rem;
+    background: var(--color-gold-500);
+  }
+
+  /* The flowing purple/gold gradient wave used on dark bands */
+  .aurora {
+    background:
+      radial-gradient(120% 90% at 92% 108%, rgb(216 179 94 / 0.22) 0%, transparent 55%),
+      radial-gradient(90% 80% at 8% -10%, rgb(98 92 170 / 0.45) 0%, transparent 60%),
+      linear-gradient(122deg, #1c1554 0%, #2a1f74 48%, #241b6b 100%);
+  }
+
+  /* Soft lavender field behind light sections */
+  .aurora-light {
+    background:
+      radial-gradient(80% 70% at 100% 0%, rgb(232 232 248 / 0.9) 0%, transparent 60%),
+      radial-gradient(70% 90% at 0% 100%, rgb(240 240 248 / 0.95) 0%, transparent 60%),
+      var(--color-canvas);
+  }
+}
+
+@layer utilities {
+  .container-page {
+    width: 100%;
+    max-width: 80rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+
+  @media (min-width: 768px) {
+    .container-page {
+      padding-inline: 2.5rem;
+    }
+  }
+}
+
+/* Respect reduced-motion across every animated element. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
