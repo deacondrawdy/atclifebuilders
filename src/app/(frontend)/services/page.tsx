@@ -1,15 +1,142 @@
 import type { Metadata } from 'next'
-import { Placeholder } from '@/components/layout/Placeholder'
+import Image from 'next/image'
+import { Quote } from 'lucide-react'
+import {
+  serviceBadges,
+  serviceCategories,
+  services,
+  testimonials,
+  whyChooseUs,
+} from '@/lib/site'
+import { Icon } from '@/components/ui/Icon'
+import { IconBadge } from '@/components/ui/IconBadge'
+import { CtaBand } from '@/components/layout/CtaBand'
+import { ServiceGrid } from '@/components/services/ServiceGrid'
 
-export const metadata: Metadata = { title: 'Programs & Services' }
+export const metadata: Metadata = {
+  title: 'Programs & Services',
+  description:
+    'Transformational coaching, speaking, webinars, and consulting designed to empower individuals, teams, and organizations.',
+}
 
-export default function Page() {
+export default function ServicesPage() {
+  const featured = testimonials[0]
+
   return (
-    <Placeholder
-      eyebrow="Programs & Services"
-      title="Coaching. Speaking. Consulting."
-      accent="Impact."
-      body="Explore transformational programs designed to empower individuals, teams, and organizations."
-    />
+    <>
+      {/* ---------- Hero ---------- */}
+      <section className="relative overflow-hidden">
+        <div aria-hidden="true" className="aurora-light absolute inset-0 -z-10" />
+
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute right-0 top-0 hidden h-full w-[46%] lg:block"
+        >
+          <div className="relative h-full w-full">
+            <Image
+              src="/brand/founder-hero.jpg"
+              alt=""
+              fill
+              priority
+              sizes="46vw"
+              className="object-cover object-[40%_top]"
+            />
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,var(--color-canvas)_0%,rgb(247_247_251/0.9)_16%,rgb(247_247_251/0.3)_38%,transparent_56%)]" />
+            <div className="absolute inset-x-0 bottom-0 h-36 bg-[linear-gradient(to_top,var(--color-canvas),transparent)]" />
+          </div>
+        </div>
+
+        <div className="container-page relative pb-14 pt-8 md:pt-12 lg:pt-20">
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_15rem] lg:items-start">
+            <div className="max-w-xl">
+              <p className="eyebrow eyebrow-rule">
+                Certified Life Coach &amp; Leadership Consultant
+              </p>
+
+              <h1 className="mt-7 font-display text-[2.5rem] leading-[1.1] tracking-tight sm:text-5xl lg:text-[3.5rem]">
+                Programs &amp; <span className="text-violet-500">Services</span>
+              </h1>
+
+              <p className="swoosh mt-3 inline-block font-display text-xl italic text-violet-500 sm:text-2xl">
+                Coaching. Speaking. Consulting. Impact.
+              </p>
+
+              <p className="mt-7 leading-relaxed text-body">
+                Explore transformational programs and services designed to empower
+                individuals, teams, and organizations to break through limits, lead with
+                purpose, and create lasting change.
+              </p>
+
+              <ul className="mt-9 flex flex-wrap gap-x-8 gap-y-4">
+                {serviceBadges.map((badge) => (
+                  <li key={badge.title} className="flex items-center gap-3">
+                    <IconBadge name={badge.icon} size="sm" />
+                    <p className="text-[0.8125rem] font-medium leading-tight text-body">
+                      {badge.title}
+                      <br />
+                      {badge.subtitle}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Floating testimonial, as on ATC3 */}
+            <figure className="hidden rounded-2xl bg-white/95 p-5 shadow-card-hover backdrop-blur-sm lg:block">
+              <Quote className="size-6 fill-violet-200 text-violet-200" />
+              <blockquote className="mt-3 text-[0.8125rem] leading-relaxed text-body">
+                {featured.quote}
+              </blockquote>
+              <figcaption className="mt-4 border-t border-lavender-300 pt-3">
+                <p className="text-sm font-semibold text-ink">— {featured.author}</p>
+                <p className="mt-0.5 text-[0.8125rem] text-violet-500">{featured.role}</p>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------- Filterable listing ---------- */}
+      <section className="pb-16 md:pb-20" aria-labelledby="listing-heading">
+        <div className="container-page">
+          <h2 id="listing-heading" className="sr-only">
+            All programs and services
+          </h2>
+          <ServiceGrid services={services} categories={serviceCategories} />
+
+          {/* ---------- Why choose us ---------- */}
+          <ul className="mt-8 grid gap-6 rounded-2xl bg-lavender-100 p-7 sm:grid-cols-2 lg:grid-cols-4 lg:gap-0">
+            {whyChooseUs.map((item, i) => (
+              <li
+                key={item.title}
+                className={
+                  i > 0
+                    ? 'flex gap-4 lg:border-l lg:border-lavender-300 lg:pl-6'
+                    : 'flex gap-4 lg:pr-6'
+                }
+              >
+                <span className="inline-flex size-11 shrink-0 items-center justify-center rounded-full bg-white">
+                  <Icon name={item.icon} className="size-5 text-indigo-600" />
+                </span>
+                <div>
+                  <h3 className="font-display text-[0.9375rem] font-semibold text-ink">
+                    {item.title}
+                  </h3>
+                  <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-muted">
+                    {item.body}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <CtaBand
+        title="Ready to Take the"
+        accent="Next Step?"
+        body={`Let's connect and create a plan that helps you or your organization lead with purpose and achieve lasting impact.`}
+      />
+    </>
   )
 }

@@ -2,7 +2,7 @@
 
 Marketing site, storefront, booking, and donations for **ATC (Always Thinking Community) Life Builders, Inc.** — a 501(c)(3) coaching and leadership development nonprofit.
 
-Phase 1 delivers the design system and the homepage. Every other route renders a placeholder so the site is fully navigable.
+Built so far: the design system, homepage, About, Leadership Background, and Programs & Services. Remaining routes render a placeholder so the site is fully navigable.
 
 ---
 
@@ -153,11 +153,32 @@ through the admin panel.
 This is the single most common way this setup breaks — and it breaks silently,
 about a week after launch, when the first redeploy erases every uploaded image.
 
+### Replacing an image in `public/` keeps serving the old one
+
+`next/image` caches optimised output in `.next/cache/images/`, keyed by URL —
+and browsers cache the response on top of that. Overwriting a file in
+`public/` with the *same name* will keep serving the old bytes from both.
+
+After swapping a brand asset:
+
+```bash
+rm -rf .next && pnpm build   # clear the server-side optimiser cache
+```
+
+...and hard-reload the browser. If an image looks stale, check
+`img.naturalWidth`/`naturalHeight` against the file on disk — a mismatched
+aspect ratio is the giveaway.
+
 ---
 
 ## Outstanding work
 
 ### Blocking — needs client input
+
+- [ ] **Conflicting tenure claim.** The About stats band says "5.0+ Years of
+      Impact & Service" (ATC6) while the Leadership page says "30+ Years of
+      Leadership" (ATC 1, ATC7). The 5.0 looks like the star rating leaking
+      into a tenure stat. Both are currently rendered as drawn.
 
 - [ ] **Conflicting business location.** ATC3's footer says Orlando, Florida.
       ATC5's footer says "123 Purpose Way, Inspiration, CA 90210" (placeholder).

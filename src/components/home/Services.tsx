@@ -1,8 +1,6 @@
-import { ArrowRight, Clock, Tag } from 'lucide-react'
 import { services } from '@/lib/site'
-import { Button } from '@/components/ui/Button'
 import { Eyebrow } from '@/components/ui/Eyebrow'
-import { IconBadge } from '@/components/ui/IconBadge'
+import { ServiceCard } from '@/components/services/ServiceCard'
 
 export function Services() {
   return (
@@ -27,55 +25,7 @@ export function Services() {
         <ul className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {services.map((service) => (
             <li key={service.slug}>
-              <article className="group flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-card transition-all duration-300 ease-out-soft hover:-translate-y-1.5 hover:shadow-card-hover">
-                {/* Image well — replace the gradient with real programme photography */}
-                <div className="relative h-44 overflow-hidden bg-lavender-200">
-                  <div
-                    aria-hidden="true"
-                    className="absolute inset-0 transition-transform duration-500 ease-out-soft group-hover:scale-105"
-                    style={{
-                      background:
-                        'linear-gradient(150deg, #3b23a8 0%, #625caa 45%, #d8b35e 130%)',
-                      opacity: 0.85,
-                    }}
-                  />
-                  <IconBadge
-                    name={service.icon}
-                    size="md"
-                    className="absolute -bottom-6 left-5 ring-4 ring-white"
-                  />
-                </div>
-
-                <div className="flex flex-1 flex-col p-5 pt-9">
-                  <h3 className="font-display text-xl text-ink">{service.title}</h3>
-                  <p className="mt-3 flex-1 text-sm leading-relaxed text-muted">
-                    {service.body}
-                  </p>
-
-                  <dl className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-gold-200 pt-4 text-sm">
-                    <div className="flex items-center gap-1.5">
-                      <dt className="sr-only">Duration</dt>
-                      <Clock className="size-4 text-violet-400" strokeWidth={1.75} />
-                      <dd className="text-body">{service.duration}</dd>
-                    </div>
-                    <span aria-hidden="true" className="h-4 w-px bg-lavender-300" />
-                    <div className="flex items-center gap-1.5">
-                      <dt className="sr-only">Price</dt>
-                      <Tag className="size-4 text-violet-400" strokeWidth={1.75} />
-                      <dd className="font-medium text-ink">{service.price}</dd>
-                    </div>
-                  </dl>
-
-                  <Button
-                    href={`/services/${service.slug}`}
-                    size="md"
-                    className="mt-5 w-full"
-                  >
-                    {service.cta}
-                    <ArrowRight className="size-4" />
-                  </Button>
-                </div>
-              </article>
+              <ServiceCard service={service} />
             </li>
           ))}
         </ul>
