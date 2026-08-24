@@ -21,10 +21,19 @@ export function Header() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  // Close the mobile drawer whenever the route changes.
-  useEffect(() => {
+  /*
+   * Close the mobile drawer whenever the route changes.
+   *
+   * This adjusts state during render rather than in an effect: setting state
+   * from an effect would render the stale open drawer first and then
+   * immediately re-render to close it. Covers back/forward navigation too,
+   * which an onClick handler on each link would miss.
+   */
+  const [lastPathname, setLastPathname] = useState(pathname)
+  if (pathname !== lastPathname) {
+    setLastPathname(pathname)
     setOpen(false)
-  }, [pathname])
+  }
 
   // Lock body scroll while the drawer is open.
   useEffect(() => {
