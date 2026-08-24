@@ -115,13 +115,17 @@ axis for accent phrases) + Poppins (body and UI).
 
 ```
 src/
-  app/(frontend)/        Public site — layout, homepage, placeholder routes
+  app/(frontend)/        Public site
+    about/               About + about/leadership
+    services/            Listing + [slug] detail
     api/subscribe/       Newsletter endpoint (STUB — see Outstanding work)
+    ...                  Remaining routes render <Placeholder>
   app/(payload)/         Payload admin + REST/GraphQL (do not edit by hand)
   collections/           Payload collections (Users, Media)
   components/
     home/                Hero, Services, Community, Newsletter
-    layout/              Header, Footer, Logo, Placeholder
+    services/            ServiceCard, ServiceGrid (client-side filter/sort)
+    layout/              Header, Footer, Logo, PageHero, CtaBand, Placeholder
     ui/                  Button, Icon, IconBadge, Eyebrow
   lib/site.ts            Content model — single source of truth
   payload.config.ts
