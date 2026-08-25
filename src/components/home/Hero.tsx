@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { founderHero } from '@/lib/brand'
 import { ArrowRight, Calendar, Compass, Heart, Quote, Star } from 'lucide-react'
 import { pillars, testimonials, trustBadges } from '@/lib/site'
 import { Button } from '@/components/ui/Button'
@@ -45,19 +46,19 @@ export function Hero() {
       */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 hidden xl:block"
+        className="pointer-events-none absolute inset-0 hidden lg:block"
       >
         <div className="container-page relative h-full">
           <div
             data-testid="hero-photo"
-            className="absolute right-10 top-0 h-[min(100%,40rem)] w-[52%]"
+            className="absolute right-10 top-0 h-[min(100%,34rem)] w-[38%] xl:h-[min(100%,40rem)] xl:w-[52%]"
           >
             <Image
-              src="/brand/founder-hero.jpg"
+              src={founderHero}
               alt=""
               fill
               priority
-              sizes="52vw"
+              sizes="(min-width: 1280px) 52vw, 38vw"
               className="object-cover object-left-top"
             />
             {/* Feather every edge so the photo dissolves into the canvas */}
@@ -74,7 +75,7 @@ export function Hero() {
         plaque covers the start of the eyebrow line.
       */}
       <div className="container-page relative pb-16 pt-8 md:pb-24 md:pt-12 lg:pt-20">
-        <div className="grid items-start gap-12 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-8">
+        <div className="grid items-start gap-12 xl:grid-cols-[minmax(0,1fr)_20rem] xl:gap-8">
           {/* ---------- Left: headline + CTAs + proof ---------- */}
           <div className="max-w-2xl">
             <p className="eyebrow eyebrow-rule">Certified Life Coach &amp; Leadership Consultant</p>
@@ -165,7 +166,10 @@ export function Hero() {
           </div>
 
           {/* ---------- Right: floating pillar cards ---------- */}
-          <ul data-testid="hero-pillars" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+          <ul
+            data-testid="hero-pillars"
+            className="grid gap-4 sm:grid-cols-2 xl:grid-cols-1"
+          >
             {pillars.map((pillar) => (
               <li
                 key={pillar.title}

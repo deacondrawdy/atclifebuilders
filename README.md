@@ -182,21 +182,44 @@ width. Two supporting details:
 offset is identical at 1280px and 1920px, and sweeps every page at both widths
 for elements overlapping text.
 
+### If images stop appearing, restart the server
+
+The Next image optimiser can wedge: it keeps serving the original JPEG but
+stops responding to the WebP/AVIF variants that browsers actually request. The
+page then renders with no photo, and the pending request never resolves.
+
+**A plain `curl` will tell you everything is fine.** Without an `Accept`
+header the optimiser returns JPEG from cache in milliseconds, which is not the
+path a browser takes. Always health-check with a browser-like header:
+
+```bash
+HASH=$(ls .next/static/media/ | grep founder-hero | head -1)
+curl -s -o /dev/null -w '%{http_code} %{content_type} %{time_total}s
+' --max-time 30   -H 'Accept: image/avif,image/webp,image/*,*/*;q=0.8'   "http://localhost:3000/_next/image?url=%2F_next%2Fstatic%2Fmedia%2F$HASH&w=1080&q=75"
+```
+
+Healthy looks like `200 image/webp 0.5s`. A hang means the optimiser is wedged
+— restart the server. `sharp` itself is not the problem; it encodes this image
+to WebP in ~200ms standalone.
+
+`tests/e2e/hero-layout.e2e.spec.ts` catches this state, because it waits for
+the image to actually decode rather than just checking the element exists.
+
 ### Replacing an image in `public/` keeps serving the old one
 
 `next/image` caches optimised output in `.next/cache/images/`, keyed by URL —
 and browsers cache the response on top of that. Overwriting a file in
-`public/` with the *same name* will keep serving the old bytes from both.
+`public/` with the *same name* would keep serving the old bytes from both.
 
-After swapping a brand asset:
+**This is why brand imagery is imported statically** via `src/lib/brand.ts`
+rather than referenced by path. Static imports make Next fingerprint each file
+with a content hash, so replacing an asset changes its URL and no stale copy
+can survive. They also supply intrinsic dimensions, so there's no layout shift.
 
-```bash
-rm -rf .next && pnpm build   # clear the server-side optimiser cache
-```
-
-...and hard-reload the browser. If an image looks stale, check
-`img.naturalWidth`/`naturalHeight` against the file on disk — a mismatched
-aspect ratio is the giveaway.
+Add new brand images to `src/lib/brand.ts` and import from there. If you do
+reference one by string path, remember `rm -rf .next && pnpm build` plus a hard
+reload after swapping it. A mismatched `img.naturalWidth`/`naturalHeight`
+versus the file on disk is the giveaway that you're seeing a cached copy.
 
 ---
 

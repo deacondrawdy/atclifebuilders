@@ -9,11 +9,17 @@ const dirname = path.dirname(__filename)
 const nextConfig: NextConfig = {
   images: {
     // `localPatterns` is an allow-list: any local path NOT listed here is
-    // rejected by the image optimiser with a 400. Brand assets in /public
-    // must be listed alongside Payload's media route.
+    // rejected by the image optimiser with a 400.
+    //
+    // `/_next/static/**` is required because brand imagery is imported
+    // statically (see src/lib/brand.ts), so it is served from the build
+    // output rather than from /public.
     localPatterns: [
       {
         pathname: '/api/media/file/**',
+      },
+      {
+        pathname: '/_next/static/**',
       },
       {
         pathname: '/brand/**',

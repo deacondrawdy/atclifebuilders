@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
+import { founderPortrait } from '@/lib/brand'
 import { ArrowRight, Quote, ShieldCheck } from 'lucide-react'
 import { about, impactStats, site, whatWeDo } from '@/lib/site'
 import { Button } from '@/components/ui/Button'
@@ -57,10 +58,8 @@ export default function AboutPage() {
 
           <figure className="relative overflow-hidden rounded-2xl shadow-card">
             <Image
-              src="/brand/founder-portrait.jpg"
+              src={founderPortrait}
               alt={`${about.founderQuote.author} of ${site.name}`}
-              width={890}
-              height={490}
               sizes="(min-width: 1024px) 40vw, 100vw"
               className="h-full min-h-[22rem] w-full object-cover object-top"
             />

@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { atcLogo } from '@/lib/brand'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 
@@ -19,10 +20,8 @@ export function Logo({ className }: { className?: string }) {
       )}
     >
       <Image
-        src="/brand/atc-logo.png"
+        src={atcLogo}
         alt="ATC Life Builders — Always Thinking Community"
-        width={354}
-        height={495}
         priority
         className="h-full w-full object-cover"
       />

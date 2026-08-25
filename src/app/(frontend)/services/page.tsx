@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
+import { founderHero } from '@/lib/brand'
 import { Quote } from 'lucide-react'
 import {
   serviceBadges,
@@ -36,19 +37,19 @@ export default function ServicesPage() {
         */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 hidden xl:block"
+          className="pointer-events-none absolute inset-0 hidden lg:block"
         >
           <div className="container-page relative h-full">
             <div
               data-testid="hero-photo"
-              className="absolute right-10 top-0 h-[min(100%,34rem)] w-[52%]"
+              className="absolute right-10 top-0 h-[min(100%,30rem)] w-[38%] xl:h-[min(100%,34rem)] xl:w-[52%]"
             >
               <Image
-                src="/brand/founder-hero.jpg"
+                src={founderHero}
                 alt=""
                 fill
                 priority
-                sizes="52vw"
+                sizes="(min-width: 1280px) 52vw, 38vw"
                 className="object-cover object-left-top"
               />
               <div className="absolute inset-0 bg-[linear-gradient(to_right,var(--color-canvas)_0%,rgb(247_247_251/0.9)_12%,rgb(247_247_251/0.35)_26%,transparent_44%)]" />
@@ -59,7 +60,7 @@ export default function ServicesPage() {
         </div>
 
         <div className="container-page relative pb-14 pt-8 md:pt-12 lg:pt-20">
-          <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_15rem] lg:items-start">
+          <div className="grid gap-10 xl:grid-cols-[minmax(0,1fr)_15rem] xl:items-start">
             <div className="max-w-xl">
               <p className="eyebrow eyebrow-rule">
                 Certified Life Coach &amp; Leadership Consultant
@@ -96,7 +97,7 @@ export default function ServicesPage() {
             {/* Floating testimonial, as on ATC3 */}
             <figure
               data-testid="hero-testimonial"
-              className="hidden rounded-2xl bg-white/95 p-5 shadow-card-hover backdrop-blur-sm lg:block"
+              className="hidden rounded-2xl bg-white/95 p-5 shadow-card-hover backdrop-blur-sm xl:block"
             >
               <Quote className="size-6 fill-violet-200 text-violet-200" />
               <blockquote className="mt-3 text-[0.8125rem] leading-relaxed text-body">

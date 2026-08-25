@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { atcLogo } from '@/lib/brand'
 import Link from 'next/link'
 import { Facebook, Globe, Instagram, Linkedin, Mail, MapPin, Phone, Youtube } from 'lucide-react'
 import { site } from '@/lib/site'
@@ -40,10 +41,8 @@ export function Footer() {
           {/* Brand column */}
           <div className="lg:max-w-xs">
             <Image
-              src="/brand/atc-logo.png"
+              src={atcLogo}
               alt="ATC Life Builders"
-              width={354}
-              height={495}
               className="h-24 w-auto rounded-md"
             />
             <p className="mt-6 text-sm leading-relaxed text-white/70">

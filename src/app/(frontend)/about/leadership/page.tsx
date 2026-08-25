@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
+import { founderSeated } from '@/lib/brand'
 import Link from 'next/link'
 import { ArrowRight, Calendar, ChevronRight, Compass, Quote } from 'lucide-react'
 import { leadership, testimonials } from '@/lib/site'
@@ -90,10 +91,8 @@ export default function LeadershipPage() {
                 clear the subject) and it crops badly in an upright card.
               */}
               <Image
-                src="/brand/founder-seated.jpg"
+                src={founderSeated}
                 alt="Mr. Oviedo, Founder of ATC Life Builders"
-                width={888}
-                height={892}
                 priority
                 sizes="(min-width: 1024px) 26rem, 100vw"
                 className="aspect-[4/5] w-full object-cover object-top"

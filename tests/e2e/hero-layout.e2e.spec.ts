@@ -55,6 +55,38 @@ test.describe('Hero photo vs floating cards', () => {
     expect(Math.abs(wide.bandToCard - narrow.bandToCard)).toBeLessThanOrEqual(2)
   })
 
+  test('photo is actually rendered at common desktop widths', async ({ browser }) => {
+    // Guards a real regression: while fixing the card overlap the photo was
+    // hidden below 1280px, so any narrower window showed a hero with no
+    // picture at all — which reads as broken, not as a design choice.
+    //
+    // Each width gets a fresh context. Resizing one page repeatedly makes
+    // next/image re-evaluate srcset and abort the in-flight request
+    // (net::ERR_ABORTED), which is harness churn rather than a site fault.
+    for (const path of ['/', '/services']) {
+      for (const width of [1024, 1280, 1440, 1920]) {
+        const context = await browser.newContext({ viewport: { width, height: 900 } })
+        const page = await context.newPage()
+        try {
+          await page.goto(`${BASE}${path}`, { waitUntil: 'domcontentloaded' })
+
+          const photo = page.getByTestId('hero-photo')
+          await expect(photo, `hero photo missing on ${path} at ${width}px`).toBeVisible()
+
+          const img = photo.locator('img')
+          await expect
+            .poll(() => img.evaluate((el: HTMLImageElement) => el.naturalWidth), {
+              message: `hero image never decoded on ${path} at ${width}px`,
+              timeout: 20000,
+            })
+            .toBeGreaterThan(0)
+        } finally {
+          await context.close()
+        }
+      }
+    }
+  })
+
   test('no element overlaps another element that carries text', async ({ page }) => {
     for (const path of ['/', '/about', '/about/leadership', '/services']) {
       for (const width of [1280, 1920]) {
