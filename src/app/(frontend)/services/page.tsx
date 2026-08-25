@@ -28,21 +28,33 @@ export default function ServicesPage() {
       <section className="relative overflow-hidden">
         <div aria-hidden="true" className="aurora-light absolute inset-0 -z-10" />
 
+        {/*
+          Container-anchored, matching the homepage hero. Pinning this to the
+          viewport would let the subject drift right as the window widened
+          while the testimonial card stayed with the container — they collide
+          and the card lands on the founder's face. See Hero.tsx.
+        */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute right-0 top-0 hidden h-full w-[46%] lg:block"
+          className="pointer-events-none absolute inset-0 hidden xl:block"
         >
-          <div className="relative h-full w-full">
-            <Image
-              src="/brand/founder-hero.jpg"
-              alt=""
-              fill
-              priority
-              sizes="46vw"
-              className="object-cover object-[40%_top]"
-            />
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,var(--color-canvas)_0%,rgb(247_247_251/0.9)_16%,rgb(247_247_251/0.3)_38%,transparent_56%)]" />
-            <div className="absolute inset-x-0 bottom-0 h-36 bg-[linear-gradient(to_top,var(--color-canvas),transparent)]" />
+          <div className="container-page relative h-full">
+            <div
+              data-testid="hero-photo"
+              className="absolute right-10 top-0 h-[min(100%,34rem)] w-[52%]"
+            >
+              <Image
+                src="/brand/founder-hero.jpg"
+                alt=""
+                fill
+                priority
+                sizes="52vw"
+                className="object-cover object-left-top"
+              />
+              <div className="absolute inset-0 bg-[linear-gradient(to_right,var(--color-canvas)_0%,rgb(247_247_251/0.9)_12%,rgb(247_247_251/0.35)_26%,transparent_44%)]" />
+              <div className="absolute inset-x-0 bottom-0 h-36 bg-[linear-gradient(to_top,var(--color-canvas),transparent)]" />
+              <div className="absolute inset-y-0 right-0 w-64 bg-[linear-gradient(to_left,var(--color-canvas)_0%,rgb(247_247_251/0.55)_45%,transparent_100%)]" />
+            </div>
           </div>
         </div>
 
@@ -82,7 +94,10 @@ export default function ServicesPage() {
             </div>
 
             {/* Floating testimonial, as on ATC3 */}
-            <figure className="hidden rounded-2xl bg-white/95 p-5 shadow-card-hover backdrop-blur-sm lg:block">
+            <figure
+              data-testid="hero-testimonial"
+              className="hidden rounded-2xl bg-white/95 p-5 shadow-card-hover backdrop-blur-sm lg:block"
+            >
               <Quote className="size-6 fill-violet-200 text-violet-200" />
               <blockquote className="mt-3 text-[0.8125rem] leading-relaxed text-body">
                 {featured.quote}

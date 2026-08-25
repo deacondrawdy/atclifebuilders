@@ -18,27 +18,53 @@ export function Hero() {
       </div>
 
       {/*
-        Portrait — bleeds off the right edge behind the copy on large screens.
-        The source is square, so the container is height-capped and top-anchored;
-        letting it stretch the full column height would zoom past the subject.
+        Portrait layer.
+
+        CRITICAL: this is anchored to the *content container*, not the viewport.
+        The pillar cards live in the container's right grid column, so if the
+        photo were pinned to the viewport (`right-0 w-54%`) the subject would
+        drift right as the window widened — at ~0.73vw — while the cards only
+        moved at ~0.5vw + 280px. They converge, and by 1920px the cards sit
+        squarely over the founder's face.
+
+        Anchoring both to the same box makes the gap between the face and the
+        cards constant at every width. The source image is deliberately
+        left-weighted with blurred depth on the right, so the cards overlay
+        background rather than the subject.
+
+        `w-[52%]` is load-bearing: it places the subject in the ~208px gap
+        between the text column and the card rail. The container is capped at
+        80rem, so above 1280px this geometry is identical at every width.
+
+        Shown from xl only. Between lg and xl the grid squeezes the text column
+        against the card rail, leaving no clear space for a face, so the photo
+        would land under the headline. Below xl the hero runs on the aurora
+        background alone.
+
+        tests/e2e/hero-layout.e2e.spec.ts guards all of this.
       */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute right-0 top-0 hidden h-[min(100%,46rem)] w-[54%] lg:block"
+        className="pointer-events-none absolute inset-0 hidden xl:block"
       >
-        <div className="relative h-full w-full">
-          <Image
-            src="/brand/founder-hero.jpg"
-            alt=""
-            fill
-            priority
-            sizes="54vw"
-            className="object-cover object-[42%_top]"
-          />
-          {/* Feather every edge so the photo dissolves into the canvas */}
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,var(--color-canvas)_0%,rgb(247_247_251/0.88)_16%,rgb(247_247_251/0.35)_34%,transparent_52%)]" />
-          <div className="absolute inset-x-0 bottom-0 h-56 bg-[linear-gradient(to_top,var(--color-canvas)_10%,transparent)]" />
-          <div className="absolute inset-y-0 right-0 w-32 bg-[linear-gradient(to_left,rgb(247_247_251/0.75),transparent)]" />
+        <div className="container-page relative h-full">
+          <div
+            data-testid="hero-photo"
+            className="absolute right-10 top-0 h-[min(100%,40rem)] w-[52%]"
+          >
+            <Image
+              src="/brand/founder-hero.jpg"
+              alt=""
+              fill
+              priority
+              sizes="52vw"
+              className="object-cover object-left-top"
+            />
+            {/* Feather every edge so the photo dissolves into the canvas */}
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,var(--color-canvas)_0%,rgb(247_247_251/0.9)_12%,rgb(247_247_251/0.35)_26%,transparent_44%)]" />
+            <div className="absolute inset-x-0 bottom-0 h-56 bg-[linear-gradient(to_top,var(--color-canvas)_8%,transparent)]" />
+            <div className="absolute inset-y-0 right-0 w-64 bg-[linear-gradient(to_left,var(--color-canvas)_0%,rgb(247_247_251/0.55)_45%,transparent_100%)]" />
+          </div>
         </div>
       </div>
 
@@ -139,7 +165,7 @@ export function Hero() {
           </div>
 
           {/* ---------- Right: floating pillar cards ---------- */}
-          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+          <ul data-testid="hero-pillars" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
             {pillars.map((pillar) => (
               <li
                 key={pillar.title}

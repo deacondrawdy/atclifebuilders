@@ -157,6 +157,31 @@ through the admin panel.
 This is the single most common way this setup breaks — and it breaks silently,
 about a week after launch, when the first redeploy erases every uploaded image.
 
+### Hero photo vs floating cards — don't pin them to different boxes
+
+The homepage and services heroes float cards over a photo of the founder. The
+photo layer is anchored to the **content container**, not the viewport, and
+that is deliberate.
+
+The cards live in the container's right grid column. When the photo was pinned
+to the viewport (`right-0 w-[54%]`) the subject sat at ~0.73 x viewport width
+while the cards sat at ~0.5 x viewport + 280px. The two converge as the window
+widens, and by 1920px the cards covered the founder's face entirely.
+
+Anchoring both to the same box makes the offset between them constant at every
+width. Two supporting details:
+
+- `public/brand/founder-hero.jpg` is deliberately **left-weighted**, with
+  blurred depth extended on the right, so the cards overlay background rather
+  than the subject. Do not swap in a centred portrait — use
+  `founder-seated.jpg` for upright card/figure placements instead.
+- The photo is hidden below `xl`. Between `lg` and `xl` the grid squeezes the
+  text column against the card rail, leaving no clear space for a face.
+
+`tests/e2e/hero-layout.e2e.spec.ts` guards this: it asserts the photo-to-card
+offset is identical at 1280px and 1920px, and sweeps every page at both widths
+for elements overlapping text.
+
 ### Replacing an image in `public/` keeps serving the old one
 
 `next/image` caches optimised output in `.next/cache/images/`, keyed by URL —
@@ -196,10 +221,12 @@ aspect ratio is the giveaway.
 - [ ] **Unverified social proof.** The hero claims "5.0 from 100+ clients" while
       three separate sections say "Reviews coming soon." Do not publish the
       rating until it is substantiated.
-- [ ] **Real brand assets.** `public/brand/atc-logo.png` and
-      `founder-hero.jpg` were recovered from the mockup PNGs and upscaled.
-      They are placeholders. Supply the original vector logo and licensed
-      photography.
+- [ ] **Real brand assets.** Everything in `public/brand/` was recovered from
+      the mockup PNGs and upscaled — the logo, and all four photographs. The
+      hero shot additionally has its right edge synthetically extended. They
+      are placeholders. Supply the original vector logo and licensed
+      photography. When replacing the hero, keep the subject in the left
+      portion of the frame (see the hero/card note above).
 - [ ] **Client avatars** in the hero are initials-on-gradient placeholders.
       Real client photos need signed releases.
 

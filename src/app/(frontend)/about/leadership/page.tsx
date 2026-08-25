@@ -84,8 +84,13 @@ export default function LeadershipPage() {
             </div>
 
             <figure className="overflow-hidden rounded-2xl shadow-card-hover">
+              {/*
+                Uses founder-seated, not founder-hero. The hero asset is a wide,
+                deliberately left-weighted environmental shot (so floating cards
+                clear the subject) and it crops badly in an upright card.
+              */}
               <Image
-                src="/brand/founder-hero.jpg"
+                src="/brand/founder-seated.jpg"
                 alt="Mr. Oviedo, Founder of ATC Life Builders"
                 width={888}
                 height={892}
