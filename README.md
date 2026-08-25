@@ -138,6 +138,9 @@ lifted into Payload collections without touching the components that read it.
 
 ## Deploying to Railway
 
+Railway builds from the **Dockerfile** (multi-stage, Next standalone output).
+`railway.json` pins that and a healthcheck on `/`.
+
 1. `railway init` (or link an existing project)
 2. Add a **Postgres** service — Railway injects `DATABASE_URL` automatically
 3. Set these variables on the app service:
@@ -145,7 +148,32 @@ lifted into Payload collections without touching the components that read it.
    - `NEXT_PUBLIC_SERVER_URL` — the public URL
 4. `railway up`
 
-`railway.json` pins the build/start commands and a healthcheck on `/`.
+The Dockerfile sets throwaway `PAYLOAD_SECRET` / `DATABASE_URL` values for the
+build stage only. Payload constructs its config at build time but never
+connects, and Railway's runtime variables replace both.
+
+### The deps stage must copy `pnpm-workspace.yaml`
+
+pnpm 11 refuses to run install scripts unless they are approved, and those
+approvals live in `pnpm-workspace.yaml` (`allowBuilds`). Without that file the
+install exits 1 with `ERR_PNPM_IGNORED_BUILDS` and the build dies before it
+ever reaches `next build`. sharp is useless without its install script anyway.
+
+If you rewrite the Dockerfile, keep that file in the `COPY` on the deps stage.
+
+### `libc6-compat` is needed in *two* stages
+
+`deps` and `runner` both start `FROM base`, so the runner does not inherit
+anything installed in deps. sharp needs the compat layer at runtime as well as
+install time — omit it in `runner` and image optimisation fails only in
+production.
+
+### `pnpm start` warns locally — that's expected
+
+`output: 'standalone'` is set for the container build, and `next start` prints
+"does not work with output: standalone". It does in fact serve correctly (all
+routes and the image optimiser included); the warning is cosmetic. The
+container runs `node server.js` from the standalone output instead.
 
 ### Railway has an ephemeral filesystem
 

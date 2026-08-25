@@ -1,0 +1,33 @@
+# Never bake local install output or build artefacts into the image — the
+# container installs and builds from scratch.
+node_modules
+.next
+out
+build
+
+# Never copy real secrets into an image layer.
+.env
+.env*.local
+.env.production
+
+# Test output
+coverage
+test-results
+playwright-report
+blob-report
+playwright/.cache
+
+# VCS / tooling / editor cruft
+.git
+.gitignore
+.github
+.vscode
+.idea
+.gstack
+*.log
+.DS_Store
+Thumbs.db
+
+# Docs and local-only compose config
+README.md
+docker-compose.yml

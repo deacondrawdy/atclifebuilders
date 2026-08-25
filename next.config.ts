@@ -7,6 +7,10 @@ const __filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(__filename)
 
 const nextConfig: NextConfig = {
+  // Emits .next/standalone with a self-contained server.js and only the
+  // traced runtime dependencies. The Dockerfile copies that directory, so
+  // removing this breaks the container build.
+  output: 'standalone',
   images: {
     // `localPatterns` is an allow-list: any local path NOT listed here is
     // rejected by the image optimiser with a 400.
