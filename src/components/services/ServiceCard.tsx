@@ -1,3 +1,4 @@
+import Image, { type StaticImageData } from 'next/image'
 import { ArrowRight, Clock, Tag } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { IconBadge } from '@/components/ui/IconBadge'
@@ -6,6 +7,7 @@ import type { IconName } from '@/components/ui/Icon'
 export type Service = {
   slug: string
   icon: IconName
+  image: StaticImageData
   title: string
   category: string
   body: string
@@ -16,20 +18,23 @@ export type Service = {
 
 /**
  * Shared service card, used by both the homepage grid and the services
- * listing. The image well is a gradient placeholder until real programme
- * photography is supplied.
+ * listing.
  */
 export function ServiceCard({ service }: { service: Service }) {
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-card transition-all duration-300 ease-out-soft hover:-translate-y-1.5 hover:shadow-card-hover">
       <div className="relative h-44 overflow-hidden bg-lavender-200">
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 transition-transform duration-500 ease-out-soft group-hover:scale-105"
-          style={{
-            background: 'linear-gradient(150deg, #3b23a8 0%, #625caa 45%, #d8b35e 130%)',
-            opacity: 0.85,
-          }}
+        {/*
+          Decorative: the card title directly below already names the service.
+          `object-[50%_30%]` keeps faces in frame when a wide card crops the
+          top and bottom of the photo.
+        */}
+        <Image
+          src={service.image}
+          alt=""
+          fill
+          sizes="(min-width: 1024px) 22rem, (min-width: 640px) 50vw, 100vw"
+          className="object-cover object-[50%_30%] transition-transform duration-500 ease-out-soft group-hover:scale-105"
         />
         <IconBadge
           name={service.icon}

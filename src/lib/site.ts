@@ -7,6 +7,13 @@
  * disagree on location and contact details. Confirm with the client.
  */
 
+import {
+  serviceBusinessConsulting,
+  serviceGuestSpeaking,
+  serviceHolisticLifeCoaching,
+  serviceWebinars,
+} from '@/lib/brand'
+
 export const site = {
   name: 'ATC Life Builders',
   legalName: 'ATC (Always Thinking Community) Life Builders, Inc.',
@@ -105,6 +112,7 @@ export const services = [
   {
     slug: 'holistic-life-coaching',
     icon: 'flower',
+    image: serviceHolisticLifeCoaching,
     title: 'Holistic Life Coaching',
     category: 'Coaching',
     body: 'Personalized 1:1 coaching to help you clarify your purpose, build confidence, and create a life of balance, fulfillment, and impact.',
@@ -115,6 +123,7 @@ export const services = [
   {
     slug: 'guest-speaking',
     icon: 'mic',
+    image: serviceGuestSpeaking,
     title: 'Guest Speaker',
     category: 'Speaking',
     body: 'Inspiring and engaging talks that motivate audiences to lead with purpose, overcome challenges, and create meaningful change.',
@@ -125,6 +134,7 @@ export const services = [
   {
     slug: 'webinars',
     icon: 'monitor-play',
+    image: serviceWebinars,
     title: 'Webinars',
     category: 'Events',
     body: 'Interactive, high-impact sessions designed to educate, inspire, and equip your audience with practical strategies for growth.',
@@ -135,6 +145,7 @@ export const services = [
   {
     slug: 'business-consulting',
     icon: 'briefcase',
+    image: serviceBusinessConsulting,
     title: 'Business Consulting',
     category: 'Consulting',
     body: 'Strategic consulting to help organizations strengthen leadership, improve performance, and drive sustainable growth.',

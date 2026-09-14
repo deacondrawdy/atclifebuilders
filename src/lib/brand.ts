@@ -18,3 +18,9 @@ export { default as booksDesk } from '../../public/brand/books-desk.jpg'
 export { default as founderHero } from '../../public/brand/founder-hero.jpg'
 export { default as founderPortrait } from '../../public/brand/founder-portrait.jpg'
 export { default as founderSeated } from '../../public/brand/founder-seated.jpg'
+
+/** Service card photos, one per entry in `services` (src/lib/site.ts). */
+export { default as serviceBusinessConsulting } from '../../public/brand/service-business-consulting.png'
+export { default as serviceGuestSpeaking } from '../../public/brand/service-guest-speaking.png'
+export { default as serviceHolisticLifeCoaching } from '../../public/brand/service-holistic-life-coaching.png'
+export { default as serviceWebinars } from '../../public/brand/service-webinars.png'
