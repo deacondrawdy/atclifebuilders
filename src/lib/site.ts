@@ -89,7 +89,7 @@ export const pillars = [
     body: 'Clarity, confidence, and purpose for every season of life.',
   },
   {
-    icon: 'heart-handshake',
+    icon: 'heart',
     title: 'Community Impact',
     body: 'Stronger families, empowered youth, and thriving communities.',
   },

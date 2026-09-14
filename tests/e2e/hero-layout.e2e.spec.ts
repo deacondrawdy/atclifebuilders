@@ -25,7 +25,13 @@ async function offsets(page: import('@playwright/test').Page, url: string, cardI
   const band = await photo.boundingBox()
   const card = await page.getByTestId(cardId).boundingBox()
   if (!band || !card) throw new Error('hero photo band or card not found')
-  return { bandToCard: Math.round(card.x - band.x), bandLeft: Math.round(band.x) }
+  return {
+    bandToCard: Math.round(card.x - band.x),
+    bandLeft: Math.round(band.x),
+    // How far down the portrait the cards begin, as a fraction of its height.
+    // 1 = the cards start exactly at the portrait's bottom edge.
+    cardTopInBand: (card.y - band.y) / band.height,
+  }
 }
 
 test.describe('Hero photo vs floating cards', () => {
@@ -41,6 +47,38 @@ test.describe('Hero photo vs floating cards', () => {
 
     // And the band itself must actually move with the centred container.
     expect(wide.bandLeft).toBeGreaterThan(narrow.bandLeft)
+
+    // The cards sit beneath the portrait. They may tuck into its faded bottom
+    // edge, but must never climb up toward the founder's face.
+    expect(narrow.cardTopInBand).toBeGreaterThanOrEqual(0.9)
+    expect(wide.cardTopInBand).toBeGreaterThanOrEqual(0.9)
+  })
+
+  test('homepage: nothing in the copy column crosses into the card column', async ({ page }) => {
+    // Guards a real regression: at the default large button padding the CTA
+    // pair was wider than the copy column, and "Explore Programs" ran into the
+    // first pillar card. The generic overlap sweep missed it because the
+    // shared area was under its 25% threshold.
+    for (const width of [1280, 1920]) {
+      await page.setViewportSize({ width, height: 900 })
+      await page.goto(BASE, { waitUntil: 'domcontentloaded' })
+      const cards = await page.getByTestId('hero-pillars').boundingBox()
+      if (!cards) throw new Error('hero pillars not found')
+
+      const rightmost = await page.evaluate(() => {
+        const heading = document.getElementById('hero-heading')
+        const column = heading?.parentElement
+        if (!column) return null
+        return Math.max(
+          ...[...column.querySelectorAll('a, p, h1, li')].map(
+            (el) => el.getBoundingClientRect().right,
+          ),
+        )
+      })
+      if (rightmost === null) throw new Error('hero copy column not found')
+
+      expect(rightmost, `copy column overflows at ${width}px`).toBeLessThanOrEqual(cards.x - 8)
+    }
   })
 
   test('services: photo and testimonial card keep a constant offset', async ({ page }) => {

@@ -16,6 +16,8 @@
 export { default as atcLogo } from '../../public/brand/atc-logo.png'
 export { default as booksDesk } from '../../public/brand/books-desk.jpg'
 export { default as founderHero } from '../../public/brand/founder-hero.jpg'
+/** Homepage hero. Cropped from the "ATC HERO BALANCED PAGE" mockup, so it is 804px wide. */
+export { default as founderHeroDesk } from '../../public/brand/founder-hero-desk.jpg'
 export { default as founderPortrait } from '../../public/brand/founder-portrait.jpg'
 export { default as founderSeated } from '../../public/brand/founder-seated.jpg'
 

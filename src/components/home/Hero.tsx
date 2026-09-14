@@ -1,14 +1,26 @@
 import Image from 'next/image'
-import { founderHero } from '@/lib/brand'
-import { ArrowRight, Calendar, Compass, Heart, Quote, Star } from 'lucide-react'
-import { pillars, testimonials, trustBadges } from '@/lib/site'
+import { founderHeroDesk } from '@/lib/brand'
+import { ArrowRight, Calendar, Compass, Heart, Star } from 'lucide-react'
+import { pillars } from '@/lib/site'
 import { Button } from '@/components/ui/Button'
-import { Icon } from '@/components/ui/Icon'
 import { IconBadge } from '@/components/ui/IconBadge'
 
-export function Hero() {
-  const featured = testimonials[0]
+/**
+ * Layout follows the "ATC HERO BALANCED PAGE" mockup.
+ *
+ * From xl: two columns. Copy on the left; on the right the portrait with the
+ * pillar cards in a 2x2 grid directly beneath it, so no card ever sits on the
+ * founder. Below xl everything stacks: copy, portrait, cards.
+ *
+ * tests/e2e/hero-layout.e2e.spec.ts guards the portrait/card relationship.
+ */
 
+// Dissolve every edge of the portrait into the canvas instead of showing a
+// hard photo boundary. Two gradients, intersected.
+const portraitMask =
+  'linear-gradient(to right, transparent 0%, #000 14%, #000 94%, transparent 100%), linear-gradient(to bottom, transparent 0%, #000 8%, #000 84%, transparent 100%)'
+
+export function Hero() {
   return (
     <section className="relative overflow-hidden" aria-labelledby="hero-heading">
       {/* Soft lavender field + the gold/violet aurora sweep at bottom-right */}
@@ -19,74 +31,24 @@ export function Hero() {
       </div>
 
       {/*
-        Portrait layer.
-
-        CRITICAL: this is anchored to the *content container*, not the viewport.
-        The pillar cards live in the container's right grid column, so if the
-        photo were pinned to the viewport (`right-0 w-54%`) the subject would
-        drift right as the window widened — at ~0.73vw — while the cards only
-        moved at ~0.5vw + 280px. They converge, and by 1920px the cards sit
-        squarely over the founder's face.
-
-        Anchoring both to the same box makes the gap between the face and the
-        cards constant at every width. The source image is deliberately
-        left-weighted with blurred depth on the right, so the cards overlay
-        background rather than the subject.
-
-        `w-[52%]` is load-bearing: it places the subject in the ~208px gap
-        between the text column and the card rail. The container is capped at
-        80rem, so above 1280px this geometry is identical at every width.
-
-        Shown from xl only. Between lg and xl the grid squeezes the text column
-        against the card rail, leaving no clear space for a face, so the photo
-        would land under the headline. Below xl the hero runs on the aurora
-        background alone.
-
-        tests/e2e/hero-layout.e2e.spec.ts guards all of this.
-      */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 hidden lg:block"
-      >
-        <div className="container-page relative h-full">
-          <div
-            data-testid="hero-photo"
-            className="absolute right-10 top-0 h-[min(100%,34rem)] w-[38%] xl:h-[min(100%,40rem)] xl:w-[52%]"
-          >
-            <Image
-              src={founderHero}
-              alt=""
-              fill
-              priority
-              sizes="(min-width: 1280px) 52vw, 38vw"
-              className="object-cover object-left-top"
-            />
-            {/* Feather every edge so the photo dissolves into the canvas */}
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,var(--color-canvas)_0%,rgb(247_247_251/0.9)_12%,rgb(247_247_251/0.35)_26%,transparent_44%)]" />
-            <div className="absolute inset-x-0 bottom-0 h-56 bg-[linear-gradient(to_top,var(--color-canvas)_8%,transparent)]" />
-            <div className="absolute inset-y-0 right-0 w-64 bg-[linear-gradient(to_left,var(--color-canvas)_0%,rgb(247_247_251/0.55)_45%,transparent_100%)]" />
-          </div>
-        </div>
-      </div>
-
-      {/*
         `lg:pt-20` clears the logo plaque, which hangs 10rem down from the top
         of the page while the header bar is only 5rem tall. Without it the
         plaque covers the start of the eyebrow line.
       */}
-      <div className="container-page relative pb-16 pt-8 md:pb-24 md:pt-12 lg:pt-20">
-        <div className="grid items-start gap-12 xl:grid-cols-[minmax(0,1fr)_20rem] xl:gap-8">
+      <div className="container-page relative pb-12 pt-8 md:pb-16 md:pt-12 lg:pt-20">
+        <div className="grid items-start gap-12 xl:grid-cols-[minmax(0,35rem)_minmax(0,1fr)] xl:gap-10">
           {/* ---------- Left: headline + CTAs + proof ---------- */}
           <div className="max-w-2xl">
             <p className="eyebrow eyebrow-rule">Certified Life Coach &amp; Leadership Consultant</p>
 
             <h1
               id="hero-heading"
-              className="mt-7 font-display text-[2.75rem] leading-[1.08] tracking-tight sm:text-6xl lg:text-[4.25rem]"
+              className="mt-7 font-display text-[2.75rem] leading-[1.08] tracking-tight sm:text-6xl lg:text-[4.25rem] xl:text-[4rem]"
             >
               Clarity. Confidence.
               <br />
-              Purpose.{' '}
+              Purpose.
+              <br />
               <span className="accent-phrase swoosh">Life&nbsp;by&nbsp;Design.</span>
             </h1>
 
@@ -100,13 +62,18 @@ export function Hero() {
               change through certified coaching and leadership development.
             </p>
 
+            {/*
+              `xl:px-6`: at the default lg padding the pair is ~603px wide, wider
+              than the 35rem copy column, and "Explore Programs" ran into the
+              first pillar card.
+            */}
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <Button href="/book" size="lg">
+              <Button href="/book" size="lg" className="xl:px-6">
                 <Calendar className="size-[1.15rem]" />
                 Book a Free Consultation
                 <ArrowRight className="size-[1.05rem]" />
               </Button>
-              <Button href="/services" variant="secondary" size="lg">
+              <Button href="/services" variant="secondary" size="lg" className="xl:px-6">
                 <Compass className="size-[1.15rem] text-indigo-600" />
                 Explore Programs
                 <ArrowRight className="size-[1.05rem]" />
@@ -114,79 +81,82 @@ export function Hero() {
             </div>
 
             {/* Social proof row */}
-            <div className="mt-12 flex flex-wrap items-center gap-x-8 gap-y-6">
-              <div className="flex items-center gap-4">
-                <AvatarStack />
-                <div>
-                  <div className="flex gap-0.5" aria-hidden="true">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Star key={i} className="size-4 fill-gold-500 text-gold-500" />
-                    ))}
-                  </div>
-                  <p className="mt-1.5 font-display text-lg font-semibold text-ink">
-                    5.0 from 100+ clients
-                  </p>
-                  <p className="mt-0.5 max-w-[15rem] text-xs leading-snug text-muted">
-                    Trusted by clients seeking personal growth and leadership clarity.
-                  </p>
+            <div className="mt-10 flex items-center gap-4 border-t border-lavender-300 pt-8">
+              <AvatarStack />
+              <div>
+                <div className="flex gap-0.5" aria-hidden="true">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star key={i} className="size-4 fill-gold-500 text-gold-500" />
+                  ))}
                 </div>
+                <p className="mt-1.5 font-display text-lg font-semibold text-ink">
+                  5.0 from 100+ clients
+                </p>
+                <p className="mt-0.5 max-w-[15rem] text-xs leading-snug text-muted">
+                  Trusted by clients seeking personal growth and leadership clarity.
+                </p>
               </div>
-
-              <ul className="flex flex-wrap gap-x-6 gap-y-4">
-                {trustBadges.map((badge) => (
-                  <li key={badge.title} className="flex w-24 flex-col items-center text-center">
-                    <span className="inline-flex size-11 items-center justify-center rounded-full bg-lavender-200 text-indigo-600">
-                      <Icon name={badge.icon} className="size-5" />
-                    </span>
-                    <p className="mt-2 text-[0.6875rem] font-medium leading-tight text-body">
-                      {badge.title}
-                      <br />
-                      {badge.subtitle}
-                    </p>
-                  </li>
-                ))}
-              </ul>
             </div>
-
-            {/* Featured testimonial */}
-            <figure className="mt-10 max-w-xl rounded-2xl bg-white p-6 shadow-card">
-              <div className="flex gap-4">
-                <Quote className="size-7 shrink-0 fill-violet-200 text-violet-200" />
-                <div className="flex flex-1 flex-col gap-4 sm:flex-row sm:items-center">
-                  <blockquote className="flex-1 text-sm leading-relaxed text-body">
-                    {featured.quote}
-                  </blockquote>
-                  <figcaption className="shrink-0 border-lavender-300 sm:border-l sm:pl-5">
-                    <p className="font-display font-semibold text-ink">— {featured.author}</p>
-                    <p className="mt-0.5 text-sm text-violet-500">{featured.role}</p>
-                  </figcaption>
-                </div>
-              </div>
-            </figure>
           </div>
 
-          {/* ---------- Right: floating pillar cards ---------- */}
-          <ul
-            data-testid="hero-pillars"
-            className="grid gap-4 sm:grid-cols-2 xl:grid-cols-1"
-          >
-            {pillars.map((pillar) => (
-              <li
-                key={pillar.title}
-                className="group flex gap-4 rounded-2xl bg-white/95 p-5 shadow-card backdrop-blur-sm transition-all duration-300 ease-out-soft hover:-translate-y-1 hover:shadow-card-hover"
+          {/* ---------- Right: portrait with the pillar cards beneath ---------- */}
+          <div className="relative xl:-mt-20">
+            {/*
+              From xl the portrait reaches 2.5rem past the column on both sides:
+              left under the column gap, right into the container padding. That
+              matches the mockup proportions without reaching the headline,
+              which ends well short of the column edge.
+            */}
+            <div data-testid="hero-photo" className="relative aspect-[804/549] xl:-mx-10">
+              <Image
+                src={founderHeroDesk}
+                alt=""
+                fill
+                priority
+                sizes="(min-width: 1280px) 42.5rem, (min-width: 768px) 90vw, 100vw"
+                className="object-cover"
+                style={{
+                  maskImage: portraitMask,
+                  maskComposite: 'intersect',
+                  WebkitMaskImage: portraitMask,
+                  WebkitMaskComposite: 'source-in',
+                }}
+              />
+              {/* Thin gold arc hugging the portrait's left edge, as in the mockup */}
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 60 240"
+                fill="none"
+                className="absolute -left-4 bottom-[4%] hidden h-[48%] w-auto xl:block"
               >
-                <IconBadge name={pillar.icon} size="md" />
-                <div>
-                  <h2 className="font-sans text-[0.9375rem] font-semibold leading-snug text-ink">
-                    {pillar.title}
-                  </h2>
-                  <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-muted">
-                    {pillar.body}
-                  </p>
-                </div>
-              </li>
-            ))}
-          </ul>
+                <path
+                  d="M58 2 C 4 60, 4 180, 58 238"
+                  stroke="rgb(216 179 94 / 0.6)"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </div>
+
+            <ul data-testid="hero-pillars" className="relative -mt-4 grid gap-4 sm:grid-cols-2">
+              {pillars.map((pillar) => (
+                <li
+                  key={pillar.title}
+                  className="group flex gap-4 rounded-2xl bg-white/95 p-5 shadow-card backdrop-blur-sm transition-all duration-300 ease-out-soft hover:-translate-y-1 hover:shadow-card-hover"
+                >
+                  <IconBadge name={pillar.icon} size="md" />
+                  <div>
+                    <h2 className="font-sans text-[0.9375rem] font-semibold leading-snug text-ink">
+                      {pillar.title}
+                    </h2>
+                    <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-muted">
+                      {pillar.body}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
 
