@@ -4,6 +4,18 @@
 
 FROM node:22.17.0-alpine AS base
 
+# Pin pnpm. Keep in step with the version used locally (`pnpm --version`).
+#
+# Installed from npm rather than via `corepack enable pnpm`: with no version
+# pinned, Corepack fetches whatever pnpm is tagged `latest`. pnpm 12 ships a
+# native binary instead of bin/pnpm.cjs, and the Corepack bundled with Node
+# 22.17 can't run it ("Cannot find module .../pnpm/12.4.1/bin/pnpm.cjs"), so
+# the build broke the day 12 became latest, with no change on our side.
+#
+# ENV, not ARG: an ARG declared in this stage is not inherited by the stages
+# built FROM base, so deps and builder would see an empty version.
+ENV PNPM_VERSION=11.5.0
+
 # ---------------------------------------------------------------------------
 # deps — install node_modules only
 # ---------------------------------------------------------------------------
@@ -20,7 +32,7 @@ COPY package.json pnpm-workspace.yaml yarn.lock* package-lock.json* pnpm-lock.ya
 RUN \
   if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
   elif [ -f package-lock.json ]; then npm ci; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile; \
+  elif [ -f pnpm-lock.yaml ]; then npm install -g pnpm@${PNPM_VERSION} && pnpm i --frozen-lockfile; \
   else echo "Lockfile not found." && exit 1; \
   fi
 
@@ -48,7 +60,7 @@ ENV DATABASE_URL=postgres://build:build@127.0.0.1:5432/build
 RUN \
   if [ -f yarn.lock ]; then yarn run build; \
   elif [ -f package-lock.json ]; then npm run build; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build; \
+  elif [ -f pnpm-lock.yaml ]; then npm install -g pnpm@${PNPM_VERSION} && pnpm run build; \
   else echo "Lockfile not found." && exit 1; \
   fi
 
